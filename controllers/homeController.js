@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 module.exports = async (req, res) => {
+    const refreshTokenUrl = `https://www.strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&redirect_uri=${process.env.HOST}/exchangetoken&response_type=code&scope=activity:read_all`
     let date = new Date();
     let unixTimeStamp = Math.floor(date.getTime() / 1000);
     // let UserData = await Users.findById(req.session.userId)
@@ -53,7 +54,8 @@ module.exports = async (req, res) => {
     }
     
     res.render('home', {
-        UserData
+        UserData,
+        refreshTokenUrl
     })
 }
 
