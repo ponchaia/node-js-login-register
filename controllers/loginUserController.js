@@ -1,17 +1,13 @@
 const bcrypt = require('bcrypt')
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const Users = require('../models/Users')
+
 module.exports = async (req, res) => {
     const { email, password } = req.body
     
-    await prisma.users.findFirst({
-        where: {
-            email: email,
-        },
-    }).then(async (user) =>{
+    await Users.findOne({ email: email }).then(async (user) =>{
         if (user) {
             console.log('user', user)
-            let cmp = bcrypt.compare(password, user.password).then(async (match) => {
+            let cmp = bcrypt.compare(password, user.password).then((match) => {
                 if (match) {
                     console.log("User's password is match")
                     req.session.userId = user.id
@@ -20,20 +16,16 @@ module.exports = async (req, res) => {
                     console.log("User's password is not match")
                     res.redirect('/login')
                 }
-            }).then(async () => {
-                await prisma.$disconnect()
             }).catch(async (e) => {
                 console.error(e)
-                await prisma.$disconnect()
-                process.exit(1)
+                res.redirect('/login')
             })
         } else {        
             console.log("User not found!")
             res.redirect('/login')
         }
     }).catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()        
+        console.error(e)     
         res.redirect('/login')
     })
 }

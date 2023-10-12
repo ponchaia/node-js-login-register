@@ -1,15 +1,16 @@
 const express = require('express')
 const app = express()
 const ejs = require('ejs')
+const mongoose = require('mongoose')
 const expressSession = require('express-session')
 const {createClient} = require('redis')
 const RedisStore = require('connect-redis').default
 const flash = require('connect-flash')
 
 // MongoDB Connection
-// mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
-//     useNewUrlParser: true
-// })
+mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
+    useNewUrlParser: true
+})
 let redisClient = createClient({
     url: process.env.REDIS_URL
 })

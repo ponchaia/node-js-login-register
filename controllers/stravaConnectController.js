@@ -1,13 +1,6 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const Users = require('../models/Users')
 
 module.exports = async (req, res) => {
-    console.log('Strava connect req', req)
-    let UserData = await prisma.users.findUnique({
-        where: {
-            id: req.session.userId,
-        },
-    })
     const code = req.query.code
     const reqBody = {
         client_id: process.env.STRAVA_CLIENT_ID.replace('\r',''),
@@ -25,32 +18,12 @@ module.exports = async (req, res) => {
             tokenExpiresAt: data.expires_at,
             tokenExpiresIn: data.expires_in,
         }
-        await prisma.users.findUnique({
-            where: {
-                id: req.session.userId,
-            },
-        }).then(async (user) => {
-            if (user) {
-                console.log('User', user)
-                await prisma.users.update({
-                    where: {
-                        id: user.id,
-                    },
-                    data: updateData
-                }).then(async () => {                    
-                    await prisma.$disconnect()
-                    console.log("Update strava user profile successfully!")
-                    return res.redirect('/strava')
-                }).catch(async (error) => {
-                    await prisma.$disconnect()
-                    console.error(error)
-                    return res.redirect('/home')
-                })
-            }
+        await Users.findOneAndUpdate({ id: req.session.userId}, updateData).then(() => {
+            console.log("Update strava user profile successfully!")
+            return res.redirect('/strava')
         }).catch(async (error) => {
-            await prisma.$disconnect()
             console.error(error)
-            return res.redirect('/')
+            return res.redirect('/home')
         })
     }).catch((error) => {
         console.error(error)

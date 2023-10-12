@@ -1,13 +1,9 @@
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+const Users = require('../models/Users')
 
 module.exports = async (req, res, next) => {
     console.log('Auth middleware session ID', req.session.userId)
-    await prisma.users.findUnique({
-        where: {
-            id: req.session.userId,
-        },
-    }).then((user) => {
+    await Users.findById(req.session.userId)
+    .then((user) => {
         if (!user) {
             return res.redirect('/')
         }
