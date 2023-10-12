@@ -1,7 +1,9 @@
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-module.exports = async (req, res) => {
+module.exports = async (req, res) => {    
+    console.log('strava req', req)
+    console.log('strava req user id', req.session.userId)
     let UserData = await prisma.users.findUnique({
         where: {
             id: req.session.userId,
