@@ -1,15 +1,24 @@
 const express = require('express')
 const app = express()
 const ejs = require('ejs')
-const mongoose = require('mongoose')
 const expressSession = require('express-session')
+const {createClient} = require('redis')
+const RedisStore = require('connect-redis').default
 const flash = require('connect-flash')
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
-    useNewUrlParser: true
+// mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
+//     useNewUrlParser: true
+// })
+let redisClient = createClient({
+    url: process.env.REDIS_URL
 })
+redisClient.connect().catch(console.error)
 
+let redisStore = new RedisStore({
+    client: redisClient,
+    prefix: "myapp:",
+  })
 global.loggedIn = null
 
 // Controllers
@@ -28,15 +37,20 @@ const stravaUpdateController = require('./controllers/stravaUpdateController')
 const redirectIfAuth = require('./middleware/redirectIfAuth')
 const authMiddleware = require('./middleware/authMiddleware')
 
+app.set('trust proxy', 1)
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded())
 app.use(flash())
+
 app.use(expressSession({
-    secret: "node secret"
+    store: redisStore,
+    secret: 'secret',
+    saveUninitialized: true,
+    resave: false
 }))
-app.use("*", (req, res, next) => {
-    loggedIn = req.session.userId
+app.use("*", async (req, res, next) => {
+    loggedIn = req.session.userId;
     next()
 })
 app.set('view engine', 'ejs')

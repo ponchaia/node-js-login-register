@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 module.exports = async (req, res, next) => {
+    console.log('Auth middleware session ID', req.session.userId)
     await prisma.users.findUnique({
         where: {
             id: req.session.userId,

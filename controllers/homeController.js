@@ -16,7 +16,8 @@ module.exports = async (req, res) => {
     console.log('clientId', clientId)
     console.log('clientSecret', clientSecret)
     if (UserData) {
-        if (UserData.stravaUserId && UserData.stravaUserId != 0 && UserData.tokenExpiresAt < unixTimeStamp) {
+        if (UserData.stravaUserId && UserData.stravaUserId != 0 && UserData.tokenExpiresAt < unixTimeStamp) {            
+            console.log('Strava token expired')
             postData(`https://www.strava.com/oauth/token?client_id=${clientId}&client_secret=${clientSecret}&code=${UserData.authorizationCode}&grant_type=refresh_token&refresh_token=${UserData.refreshToken}`)
             .then(async (response) => {
                 if (response) {

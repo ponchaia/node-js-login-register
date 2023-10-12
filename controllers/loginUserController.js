@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     }).then(async (user) =>{
         if (user) {
             console.log(user)
-            let cmp = bcrypt.compare(password, user.password).then((match) => {
+            let cmp = bcrypt.compare(password, user.password).then(async (match) => {
                 if (match) {
                     console.log("User's password is match")
                     req.session.userId = user.id
