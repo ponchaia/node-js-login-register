@@ -5,7 +5,6 @@ module.exports = async (req, res) => {
     const refreshTokenUrl = `https://www.strava.com/oauth/authorize?client_id=${process.env.STRAVA_CLIENT_ID}&redirect_uri=${process.env.HOST}/exchangetoken&response_type=code&scope=activity:read_all`
     let date = new Date();
     let unixTimeStamp = Math.floor(date.getTime() / 1000);
-    // let UserData = await Users.findById(req.session.userId)
     let UserData = await prisma.users.findUnique({
         where: {
             id: req.session.userId,
@@ -37,11 +36,6 @@ module.exports = async (req, res) => {
                         console.log('updateUserData', updateUserData)
                         await prisma.$disconnect()
                     })
-                    // Users.updateOne({ email: UserData.email}, data).then(() => {
-                    //     console.log("Update strava token successfully!")
-                    // }).catch((error) => {
-                    //     console.log(error)
-                    // })
                 }
             }).then(async () => {
                 await prisma.$disconnect()

@@ -75,7 +75,7 @@ const getAthleteData = async (userId, accessToken) => {
             console.log('Athlete', data)
         }
     }).catch((error) => {
-        console.log(error)
+        console.error(error)
     })
 }
 const getAthleteStatData = async (userId, accessToken, stravaUserId) => {
@@ -112,7 +112,7 @@ const getAthleteStatData = async (userId, accessToken, stravaUserId) => {
                 }
             }).catch(async(error) => {
                 await prisma.$disconnect()
-                console.log(error)
+                console.error(error)
             })
         } else {
             console.log('Athlete Stat', data)
@@ -153,7 +153,7 @@ const getAthleteActivityData = async (userId, accessToken) => {
                 }
             }).catch(async(error) => {
                 await prisma.$disconnect()
-                console.log(error)
+                console.error(error)
             })
         } else {
             console.log('Athlete Activity', data)
@@ -194,7 +194,7 @@ const getActivityData = async (userId, accessToken) => {
                 }
             }).catch(async(error) => {
                 await prisma.$disconnect()
-                console.log(error)
+                console.error(error)
             })
         } else {
             console.log('Activity', data)

@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
         },
     }).then(async (user) =>{
         if (user) {
-            console.log(user)
+            console.log('user', user)
             let cmp = bcrypt.compare(password, user.password).then(async (match) => {
                 if (match) {
                     console.log("User's password is match")
@@ -36,21 +36,4 @@ module.exports = async (req, res) => {
         await prisma.$disconnect()        
         res.redirect('/login')
     })
-    
-    // User.findOne({ email: email }).then((user) => {
-    //     console.log(user)
-
-    //     if (user) {
-    //         let cmp = bcrypt.compare(password, user.password).then((match) => {
-    //             if (match) {
-    //                 req.session.userId = user._id
-    //                 res.redirect('/home')
-    //             } else {
-    //                 res.redirect('/login')
-    //             }
-    //         })
-    //     } else {
-    //         res.redirect('/login')
-    //     }
-    // })
 }

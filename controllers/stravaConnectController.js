@@ -1,8 +1,13 @@
-const User = require('../models/Users')
+const { PrismaClient } = require('@prisma/client')
+const prisma = new PrismaClient()
 
 module.exports = async (req, res) => {
-    let UserData = await User.findById(req.session.userId)
-    console.log(req)
+    console.log('Strava connect req', req)
+    let UserData = await prisma.users.findUnique({
+        where: {
+            id: req.session.userId,
+        },
+    })
     const code = req.query.code
     const reqBody = {
         client_id: process.env.STRAVA_CLIENT_ID.replace('\r',''),
@@ -10,7 +15,7 @@ module.exports = async (req, res) => {
         code,
         grant_underscore: 'authorization_code'
     }
-    postData('https://www.strava.com/oauth/token', reqBody).then((data) => {
+    postData('https://www.strava.com/oauth/token', reqBody).then(async (data) => {
         console.log(data); // JSON data parsed by `data.json()` call
         const updateData = {
             stravaUserId: data.athlete.id,
@@ -20,23 +25,35 @@ module.exports = async (req, res) => {
             tokenExpiresAt: data.expires_at,
             tokenExpiresIn: data.expires_in,
         }
-        User.findOne({ email: UserData.email }).then((user) => {
+        await prisma.users.findUnique({
+            where: {
+                id: req.session.userId,
+            },
+        }).then(async (user) => {
             if (user) {
                 console.log('User', user)
-                User.updateOne({email: user.email}, updateData).then(() => {
+                await prisma.users.update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: updateData
+                }).then(async () => {                    
+                    await prisma.$disconnect()
                     console.log("Update strava user profile successfully!")
                     return res.redirect('/strava')
-                }).catch((error) => {
-                    console.log(error)
+                }).catch(async (error) => {
+                    await prisma.$disconnect()
+                    console.error(error)
                     return res.redirect('/home')
                 })
             }
-        }).catch((error) => {
-            console.log(error)
+        }).catch(async (error) => {
+            await prisma.$disconnect()
+            console.error(error)
             return res.redirect('/')
         })
     }).catch((error) => {
-        console.log(error)
+        console.error(error)
         return res.redirect('/')
     })
 }

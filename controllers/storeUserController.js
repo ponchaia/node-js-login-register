@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         },
     }).then(async (user) => {
         if (user) {
-            console.log(user)
+            console.log('user', user)
             console.log("This email already in use!")
             req.flash('validationErrors', ["This email already in use!"])
             req.flash('data', req.body)
@@ -22,8 +22,7 @@ module.exports = async (req, res) => {
                 console.log("User registered successfully!")
                 res.redirect('/')
             }).catch(async(error) => {
-                // console.log(error)
-                console.error(e)
+                console.error(error)
                 await prisma.$disconnect()
                 if (error) {
                     const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
@@ -32,40 +31,6 @@ module.exports = async (req, res) => {
                     return res.redirect('/register')
                 }
             })
-            // User.create(req.body).then(() => {
-            //     console.log("User registered successfully!")
-            //     res.redirect('/')
-            // }).catch((error) => {
-            //     // console.log(error)
-            //     if (error) {
-            //         const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
-            //         req.flash('validationErrors', validationErrors)
-            //         req.flash('data', req.body)
-            //         return res.redirect('/register')
-            //     }
-            // })
         }
     })
-    // User.findOne({ email: email }).then((user) => {
-    //     if (user) {
-    //         console.log(user)
-    //         console.log("This email already in use!")
-    //         req.flash('validationErrors', ["This email already in use!"])
-    //         req.flash('data', req.body)
-    //         return res.redirect('/register')
-    //     } else {
-    //         User.create(req.body).then(() => {
-    //             console.log("User registered successfully!")
-    //             res.redirect('/')
-    //         }).catch((error) => {
-    //             // console.log(error)
-    //             if (error) {
-    //                 const validationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
-    //                 req.flash('validationErrors', validationErrors)
-    //                 req.flash('data', req.body)
-    //                 return res.redirect('/register')
-    //             }
-    //         })
-    //     }
-    // })
 }
