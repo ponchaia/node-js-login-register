@@ -6,10 +6,13 @@ module.exports = async (req, res) => {
     
     console.log('strava req user id', req.session.userId)
     let strava = await StravaProfiles.findOne({ userId: req.session.userId })
+    .then((data) => {        
+        console.log('strava', data)
+        return data
+    })
     .catch(async (error) => {
         console.error(error);
     })
-    console.log('strava', strava)
     res.render('strava', {
         strava,
         refreshTokenUrl,
