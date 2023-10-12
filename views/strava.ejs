@@ -84,7 +84,7 @@
             <p class="lead mb-0">Country: <%= strava.athlete.country %></p>
             <a href="/sync/data" class="btn btn-outline-secondary mt-2">Sync Data</a>
           <% } else { %>
-            <a class="btn btn-success w-25" href="https://www.strava.com/oauth/authorize?client_id=113852&redirect_uri=http://localhost:4000/exchangetoken&response_type=code&scope=activity:read_all">Connect Strava</a>
+            <a class="btn btn-success w-25" href="<%= refreshTokenUrl %>">Connect Strava</a>
           <% } %>
         </div>
       </div>
