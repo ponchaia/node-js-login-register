@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
     })
     let strava = await prisma.stravaProfiles.findFirst({
         where: {
-            userId: req.session.userId,
+            userId: UserData.id,
         },
     })
 
