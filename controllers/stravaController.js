@@ -9,11 +9,18 @@ module.exports = async (req, res) => {
         where: {
             id: req.session.userId,
         },
+    }).catch(async (error) => {
+        await prisma.$disconnect()
+        console.error(error);
     })
+    console.log('UserData', UserData)
     let strava = await prisma.stravaProfiles.findFirst({
         where: {
             userId: req.session.userId,
         },
+    }).catch(async (error) => {
+        await prisma.$disconnect()
+        console.error(error);
     })
 
     console.log('strava', strava)

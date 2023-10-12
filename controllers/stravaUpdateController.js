@@ -6,6 +6,9 @@ module.exports = async (req, res) => {
         where: {
             id: req.session.userId,
         },
+    }).catch(async (error) => {
+        await prisma.$disconnect()
+        console.error(error);
     })
     getAthleteData(req.session.userId, UserData.accessToken).then(async () => {
         await prisma.$disconnect()
