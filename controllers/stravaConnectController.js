@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
         code,
         grant_underscore: 'authorization_code'
     }
-    postData('https://www.strava.com/oauth/token', reqBody).then(async (data) => {
+    await postData('https://www.strava.com/oauth/token', reqBody).then(async (data) => {
         console.log(data); // JSON data parsed by `data.json()` call
         const updateData = {
             stravaUserId: data.athlete.id,
@@ -18,13 +18,13 @@ module.exports = async (req, res) => {
             tokenExpiresAt: data.expires_at,
             tokenExpiresIn: data.expires_in,
         }
-        await Users.findOneAndUpdate({ id: req.session.userId}, updateData).then(() => {
-            console.log("Update strava user profile successfully!")
-            return res.redirect('/strava')
-        }).catch(async (error) => {
+        let results = await Users.findOneAndUpdate({ _id: req.session.userId}, updateData).catch((error) => {
             console.error(error)
             return res.redirect('/home')
         })
+        console.log(results)
+        console.log("Update strava user profile successfully!")
+        return res.redirect('/strava')
     }).catch((error) => {
         console.error(error)
         return res.redirect('/')

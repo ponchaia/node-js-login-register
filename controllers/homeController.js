@@ -22,10 +22,9 @@ module.exports = async (req, res) => {
                         tokenExpiresAt: response.expires_at,
                         tokenExpiresIn: response.expires_in
                     }
-                    await Users.updateOne({ id: UserData.id }, data )
-                    .then(() => {
-                        console.log('updateUserData')
-                    })
+                    let results = await Users.updateOne({ _id: UserData.id }, data )
+                    console.log(results)
+                    if(res.upsertedCount > 0) console.log('Updated UserData')
                 }
             }).catch(async (e) => {
                 console.error(e)
@@ -47,6 +46,17 @@ const postData = async (url = "", data = {}) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+}
+
+const getData = async (url = "") => {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     return response.json(); // parses JSON response into native JavaScript objects
 }

@@ -12,5 +12,5 @@ const StravaProfileSchema = new Schema({
     activities: Object,
 })
 
-const StravaProfile = mongoose.model('StravaProfiles', StravaProfileSchema)
-module.exports = StravaProfile
+const StravaProfiles = mongoose.model('StravaProfiles', StravaProfileSchema)
+module.exports = StravaProfiles

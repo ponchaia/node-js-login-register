@@ -10,16 +10,24 @@ const flash = require('connect-flash')
 // MongoDB Connection
 mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true
-})
+}).then(() => console.log('mongoose connection successfully!'))
+.catch((err) => console.error(err))
+
 let redisClient = createClient({
     url: process.env.REDIS_URL
 })
 redisClient.connect().catch(console.error)
-
+redisClient.on('error', function (err) {
+    console.log('Could not establish a connection with redis. ' + err);
+});
+redisClient.on('connect', function (err) {
+    console.log('Connected to redis successfully');
+});
 let redisStore = new RedisStore({
     client: redisClient,
     prefix: "myapp:",
   })
+
 global.loggedIn = null
 
 // Controllers
@@ -38,17 +46,24 @@ const stravaUpdateController = require('./controllers/stravaUpdateController')
 const redirectIfAuth = require('./middleware/redirectIfAuth')
 const authMiddleware = require('./middleware/authMiddleware')
 
-app.set('trust proxy', 1)
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded())
+// app.set('trust proxy', 1)
 app.use(flash())
 
 app.use(expressSession({
+    name: 'myapp',
     store: redisStore,
-    secret: 'secret',
-    saveUninitialized: true,
-    resave: false
+    secret: 'secret$%^134',
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        secure: false, // if true only transmit cookie over https
+        httpOnly: false, // if true prevent client side JS from reading the cookie 
+        maxAge: 1000 * 60 * 10, // session max age in miliseconds
+        sameSite: true
+    }
 }))
 app.use("*", async (req, res, next) => {
     loggedIn = req.session.userId;
@@ -65,7 +80,7 @@ app.post('/user/login', redirectIfAuth, loginUserController)
 app.get('/logout', logoutController)
 app.get('/strava', authMiddleware, stravaController)
 app.get('/exchangetoken', authMiddleware, stravaConnectController)
-app.get('/sync/data', authMiddleware, stravaUpdateController)
+app.put('/sync/data', authMiddleware, stravaUpdateController)
 
 app.listen(4000, () => {
     console.log("App listening on port 4000")

@@ -74,15 +74,17 @@
     <main class="container">
       <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
-          <h1 class="display-4 fst-italic">Strava User Profile</h1>
-          <% if (strava && strava.athlete != null) { %>
+          <h1 class="display-4 fst-italic">Strava User Profile</h1>          
+          <% if (UserData && UserData['stravaUserId'] != 0 && strava == null) { %>
+            <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
+          <% } else if (strava && strava['athlete'] != null) { %>
             <h3>Strava User ID <%= strava.athlete.id %></h3>
             <p class="lead mb-0">First name: <%= strava.athlete.firstname %></p>
             <p class="lead mb-0">Last name: <%= strava.athlete.lastname %></p>
             <p class="lead mb-0">City: <%= strava.athlete.city %></p>
             <p class="lead mb-0">State: <%= strava.athlete.state %></p>
             <p class="lead mb-0">Country: <%= strava.athlete.country %></p>
-            <a href="/sync/data" class="btn btn-outline-secondary mt-2">Sync Data</a>
+            <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
           <% } else { %>
             <a class="btn btn-success w-25" href="<%= refreshTokenUrl %>">Connect Strava</a>
           <% } %>
