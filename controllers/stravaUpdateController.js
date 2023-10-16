@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     await getAthleteData(decodeToken.id, UserData.accessToken)
     await getAthleteStatData(decodeToken.id, UserData.accessToken, UserData.stravaUserId)
     await getAthleteActivityData(decodeToken.id, UserData.accessToken)
-    await getActivityData(decodeToken.id, UserData.accessToken)
+    // await getActivityData(decodeToken.id, UserData.accessToken)
     let page = req.query.page ?? 'strava'
     return res.redirect(`/${page}`)
 }
@@ -62,48 +62,60 @@ const getAthleteStatData = async (userId, accessToken, stravaUserId) => {
 const getAthleteActivityData = async (userId, accessToken) => {
     let date = new Date();
     let before = Math.floor(date.getTime() / 1000);
-    date.setDate(date.getDate() - 30);
+    date.setDate(date.getDate() - 300);
     let after = Math.floor(date.getTime() / 1000);
     await getData(`https://www.strava.com/api/v3/athlete/activities?before=${before}&after=${after}&page=1&per_page=30`, accessToken).then(async (data) => {
         if (!data.errors) {    
-            let profile = await StravaProfiles.findOne({ userId: userId}).lean().exec()
-            console.log('profile', profile)
-            if (profile) {
-                let results = await StravaProfiles.updateOne({ _id: profile._id }, { athleteActivities: data })
+            await StravaProfiles.findOne({ userId: userId}).lean().exec().then(async (profile) => {
+                console.log('profile', profile)
+                if (profile) {
+                    let results = await StravaProfiles.updateOne({ _id: profile._id }, { athleteActivities: data })
+                        console.log(results)
+                        console.log('Update User athlete activity successfully!')
+                } else {
+                    let results = await StravaProfiles.create({
+                        userId: userId,
+                        athleteActivities: data,
+                    })
                     console.log(results)
-                    console.log('Update User athlete activity successfully!')
-            } else {
-                let results = await StravaProfiles.create({
-                    userId: userId,
-                    athleteActivities: data,
-                })
-                console.log(results)
-                console.log("Add User athlete activity successfully!")
-            }
+                    console.log("Add User athlete activity successfully!")
+                }
+            }).then(async() => {
+                // await StravaProfiles.findOne({ userId: userId}).lean().exec().then(profile => {
+                //     profile.athleteActivities.forEach(async element => {
+                //         getActivityData(userId, accessToken, element.id)
+                //     });
+                // })
+                
+            })
+            
         } else {
             console.log('Athlete Activity', data)
         }
     })
 }
-const getActivityData = async (userId, accessToken) => {
-    await getData(`https://www.strava.com/api/v3/activities/9317781659`, accessToken).then(async (data) => {
-        if (!data.errors) {
+const getActivityData = async (userId, accessToken, activityId) => {
+    await getData(`https://www.strava.com/api/v3/activities/${activityId}`, accessToken).then(async (activities) => {
+        if (!activities.errors) {
             let profile = await StravaProfiles.findOne({ userId: userId}).lean().exec()
             console.log('profile', profile)                
             if (profile) {
-                let results = await StravaProfiles.updateOne({ _id: profile._id }, { activities: data })
-                console.log(results)
-                console.log('Update User activities successfully!')
-            } else {
-                let results = await StravaProfiles.create({
-                    userId: userId,
-                    activities: data,
-                })
-                console.log(results)
-                console.log("Add User activities successfully!")
-            }           
+                if (profile.activities){                    
+                    profile.activities.push(activities)
+                    
+                    let results = await StravaProfiles.updateOne({ _id: profile._id }, { activities: profile.activities })
+                    console.log(results)
+                    console.log('Update User activities successfully!')
+                } else {
+                    profile.activities = [activities]
+                    
+                    let results = await StravaProfiles.updateOne({ _id: profile._id }, { activities: profile.activities })
+                    console.log(results)
+                    console.log('Update User activities successfully!')
+                }
+            }        
         } else {
-            console.log('Activity', data)
+            console.log('Activity', activities)
         }        
     })
 }
