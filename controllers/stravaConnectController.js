@@ -1,4 +1,5 @@
 const Users = require('../models/Users')
+const StravaProfiles = require('../models/StravaProfiles')
 const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res) => {
@@ -24,6 +25,13 @@ module.exports = async (req, res) => {
             console.error(error)
             return res.redirect('/home')
         })
+        let pResults = await StravaProfiles.findOne({ userId: decodeToken.id}).lean().exec()
+        if (!pResults) {
+            const profile = await StravaProfiles.create({
+                userId: userId
+            })
+            console.log('created strava profile ', profile._id)
+        }
         console.log(results)
         console.log("Update strava user profile successfully!")
         return res.redirect('/strava')
