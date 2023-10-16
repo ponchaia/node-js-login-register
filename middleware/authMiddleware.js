@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
         return res.redirect('/')
     })
     if (!user) {
-        return res.redirect('/')
+        return res.redirect('/login')
     }
     console.log('User logged in successfully')
     next()
