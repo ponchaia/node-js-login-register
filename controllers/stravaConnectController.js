@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
         let pResults = await StravaProfiles.findOne({ userId: decodeToken.id}).lean().exec()
         if (!pResults) {
             const profile = await StravaProfiles.create({
-                userId: userId
+                userId: decodeToken.id
             })
             console.log('created strava profile ', profile._id)
         }
