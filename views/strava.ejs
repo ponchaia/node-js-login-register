@@ -75,7 +75,7 @@
       <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
           <h1 class="display-4 fst-italic">Strava User Profile</h1>          
-          <% if (UserData && UserData['stravaUserId'] != 0 && strava == null) { %>
+          <% if (UserData && UserData['stravaUserId'] != 0 && strava && strava['athlete'] == null) { %>
             <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
           <% } else if (strava && strava['athlete'] != null) { %>
             <h3>Strava User ID <%= strava.athlete.id %></h3>
@@ -84,15 +84,39 @@
             <p class="lead mb-0">City: <%= strava.athlete.city %></p>
             <p class="lead mb-0">State: <%= strava.athlete.state %></p>
             <p class="lead mb-0">Country: <%= strava.athlete.country %></p>
-            <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
-          <% } else { %>
+            <% if (strava.athlete.sex == "M") { %>
+            <p class="lead mb-0">Sex: Male</p>
+            <% } else if (strava.athlete.sex == "F") { %>
+            <p class="lead mb-0">Sex: Female</p>
+            <% } else { %>
+              <p class="lead mb-0">Sex: -</p>
+            <% } %>
+            <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>            
+            <% } else { %>
             <a class="btn btn-success w-25" href="<%= refreshTokenUrl %>">Connect Strava</a>
           <% } %>
         </div>
       </div>
       <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
-          <h1 class="display-4 fst-italic">Strava User Profile</h1>
+          <h1 class="display-4 fst-italic">Athlete Activities</h1>
+          <% if (strava && strava['athleteActivities'] != null) { %>
+            <% for(let i=0; i < strava['athleteActivities'].length; i++) { %>
+              <div class="col-12 mb-4 rounded border p-2">
+                <p class="lead mb-0">Name: <%= strava.athleteActivities[i].name %></p>
+                <p class="lead mb-0">Activity type: <%= strava.athleteActivities[i].type %></p>
+                <p class="lead mb-0">Distance: <%= Math.round(strava.athleteActivities[i].distance / 1000 * 100) / 100 %> km</p>
+                <p class="lead mb-0">Moving time: <%= Math.round(strava.athleteActivities[i].moving_time / 60 * 10) / 10 %></p>
+                <p class="lead mb-0">Elevation Gain: <%= Math.round(strava.athleteActivities[i].total_elevation_gain) %> m</p>
+                <p class="lead mb-0">Average speed: <%= Math.round(strava.athleteActivities[i].average_speed * 3.6 * 10) / 10 %> km/h</p>
+                <p class="lead mb-0">Average heartrate: <%= strava.athleteActivities[i].average_heartrate %> bmp</p>
+                <p class="lead mb-0">Max heartrate: <%= strava.athleteActivities[i].max_heartrate %> bmp</p>
+                <p class="lead mb-0">Calories: ... Cal</p>                
+                <p class="lead mb-0">Start date: <%= strava.athleteActivities[i].start_date %></p>                
+                <p class="lead mb-0">End date: <%= strava.athleteActivities[i].start_date_local %></p>
+              </div>              
+            <% } %>
+          <% } %>
         </div>
       </div>
       <div class="row mb-2">
@@ -101,14 +125,6 @@
             <div class="col p-4 d-flex flex-column position-static">
               
             </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-            <div class="col p-4 d-flex flex-column position-static">
-              <strong class="d-inline-block mb-2 text-success">Design</strong>
-              
-            </div>            
           </div>
         </div>
       </div>

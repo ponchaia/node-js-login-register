@@ -1,6 +1,8 @@
 const Users = require('../models/Users')
+const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res) => {
+    const decodeToken = jwt.verify(req.cookies.nodeToken, process.env.JWT_SECRET_KEY);
     const code = req.query.code
     const reqBody = {
         client_id: process.env.STRAVA_CLIENT_ID.replace('\r',''),
@@ -18,7 +20,7 @@ module.exports = async (req, res) => {
             tokenExpiresAt: data.expires_at,
             tokenExpiresIn: data.expires_in,
         }
-        let results = await Users.findOneAndUpdate({ _id: req.session.userId}, updateData).catch((error) => {
+        let results = await Users.findOneAndUpdate({ _id: decodeToken.id}, updateData).catch((error) => {
             console.error(error)
             return res.redirect('/home')
         })

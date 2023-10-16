@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 
-const StravaProfileSchema = new Schema({
+const Schema = new mongoose.Schema({
     userId: {
         type: String,
         required: [true, 'Please provide user ID']
@@ -10,7 +9,18 @@ const StravaProfileSchema = new Schema({
     athleteStat: Object,
     athleteActivities: Object,
     activities: Object,
+    createdAt: Date,
+    updatedAt: Date,
 })
 
-const StravaProfiles = mongoose.model('StravaProfiles', StravaProfileSchema)
+Schema.pre('save', function (next) {
+    if (!this.createdAt) {
+      this.createdAt = this.updatedAt = new Date()
+    } else {
+      this.updatedAt = new Date()
+    }
+    next()
+})
+
+const StravaProfiles = mongoose.models.stravaprofiles || mongoose.model('StravaProfiles', Schema)
 module.exports = StravaProfiles

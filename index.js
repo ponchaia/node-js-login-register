@@ -2,10 +2,12 @@ const express = require('express')
 const app = express()
 const ejs = require('ejs')
 const mongoose = require('mongoose')
-const expressSession = require('express-session')
+const session = require('express-session')
 const {createClient} = require('redis')
 const RedisStore = require('connect-redis').default
 const flash = require('connect-flash')
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 
 // MongoDB Connection
 mongoose.connect('mongodb+srv://ponchai2057:Junjao2057@cluster0.eqcz3yh.mongodb.net/?retryWrites=true&w=majority', {
@@ -27,6 +29,8 @@ let redisStore = new RedisStore({
     client: redisClient,
     prefix: "myapp:",
   })
+//Configure session middleware
+
 
 global.loggedIn = null
 
@@ -49,13 +53,12 @@ const authMiddleware = require('./middleware/authMiddleware')
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded())
-// app.set('trust proxy', 1)
+app.set('trust proxy', 1)
 app.use(flash())
-
-app.use(expressSession({
-    name: 'myapp',
+app.use(cookieParser('node secret'));
+app.use(session({
     store: redisStore,
-    secret: 'secret$%^134',
+    secret: 'node secret',
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -65,8 +68,17 @@ app.use(expressSession({
         sameSite: true
     }
 }))
-app.use("*", async (req, res, next) => {
-    loggedIn = req.session.userId;
+app.use("*", async (req, res, next) => {    
+    if (req.cookies.nodeToken) {        
+        const decodeToken = jwt.verify(req.cookies.nodeToken, process.env.JWT_SECRET_KEY);
+        if (decodeToken.id){
+            loggedIn = decodeToken.id;
+        } else {
+            loggedIn = null
+        }
+    } else {
+        loggedIn = null
+    }
     next()
 })
 app.set('view engine', 'ejs')
@@ -80,7 +92,7 @@ app.post('/user/login', redirectIfAuth, loginUserController)
 app.get('/logout', logoutController)
 app.get('/strava', authMiddleware, stravaController)
 app.get('/exchangetoken', authMiddleware, stravaConnectController)
-app.put('/sync/data', authMiddleware, stravaUpdateController)
+app.get('/sync/data', authMiddleware, stravaUpdateController)
 
 app.listen(4000, () => {
     console.log("App listening on port 4000")
