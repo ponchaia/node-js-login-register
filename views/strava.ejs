@@ -81,7 +81,7 @@
           <% if (UserData && UserData['stravaUserId'] != 0 && strava && strava['athlete'] == null) { %>
             <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
           <% } else if (strava && strava['athlete'] != null) { %>
-            <h3 class="display-8">Strava User ID <%= strava.athlete.id %></h3>
+            <h4 class="display-7">Strava User ID <%= strava.athlete.id %></h4>
             <p class="lead mb-0"><small>First Name:</small> <b><%= strava.athlete.firstname %></b></p>
             <p class="lead mb-0"><small>Last Name:</small> <b><%= strava.athlete.lastname %></b></p>
             <p class="lead mb-0"><small>City:</small> <b><%= strava.athlete.city %></b></p>
@@ -130,13 +130,13 @@
                     <h3 class="display-8"><%= strava.athleteActivities[i].name %></h3><small><%= new Date(strava.athleteActivities[i].start_date) %></small>
                     <hr />
                     <p class="lead mb-0"><small>Distance:</small> <b><%= Math.round(strava.athleteActivities[i].distance / 1000 * 100) / 100 %> km</b></p>
-                    <p class="lead mb-0"><small>Moving Time:</small> <b><%= Math.floor(strava.athleteActivities[i].moving_time / 60) %>:<%= Math.round((strava.athleteActivities[i].moving_time / 60 - Math.floor(strava.athleteActivities[i].moving_time / 60)) * 60) %></b></p>
+                    <p class="lead mb-0"><small>Moving Time:</small> <b><%= Math.floor(strava.athleteActivities[i].moving_time / 60).toString().padStart(2, '0') %>:<%= Math.round((strava.athleteActivities[i].moving_time / 60 - Math.floor(strava.athleteActivities[i].moving_time / 60)) * 60).toString().padStart(2, '0') %></b></p>
                     <p class="lead mb-0"><small>Elevation Gain:</small> <b><%= Math.round(strava.athleteActivities[i].total_elevation_gain) %> m</b></p>
                     <p class="lead mb-0"><small>Average Speed:</small> <b><%= Math.round(strava.athleteActivities[i].average_speed * 3.6 * 10) / 10 %> km/h</b></p>
                     <p class="lead mb-0"><small>Average Heartrate:</small> <b><%= strava.athleteActivities[i].average_heartrate %> bmp</b></p>
                     <p class="lead mb-0"><small>Max Heartrate:</small> <b><%= strava.athleteActivities[i].max_heartrate %> bmp</b></p>
                     <p class="lead mb-0"><small>Calories:</small> <b><%= strava.athleteActivities[i].activities.calories %> Cal</b></p>                  
-                    <p class="lead mb-0"><small>Elapsed Time:</small> <b><%= Math.floor(strava.athleteActivities[i].elapsed_time / 60) %>:<%= Math.round((strava.athleteActivities[i].elapsed_time / 60 - Math.floor(strava.athleteActivities[i].elapsed_time / 60)) * 60) %></b></p>
+                    <p class="lead mb-0"><small>Elapsed Time:</small> <b><%= Math.floor(strava.athleteActivities[i].elapsed_time / 60).toString().padStart(2, '0') %>:<%= Math.round((strava.athleteActivities[i].elapsed_time / 60 - Math.floor(strava.athleteActivities[i].elapsed_time / 60)) * 60).toString().padStart(2, '0') %></b></p>
                     <hr />
                     <img src="/images/icons/watch.png" alt="Device" width="50" height="50" title="Device"> <%= strava.athleteActivities[i].activities.device_name %>
                   </div>  
