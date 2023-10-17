@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     let date = new Date();
     let unixTimeStamp = Math.floor(date.getTime() / 1000);
     let UserData = await Users.findById(decodeToken.id)
-    console.log('UserData', UserData)
+    // console.log('UserData', UserData)
     let clientId = process.env.STRAVA_CLIENT_ID
     let clientSecret = process.env.STRAVA_CLIENT_SECRET
     console.log('clientId', clientId)

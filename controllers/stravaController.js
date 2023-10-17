@@ -15,8 +15,8 @@ module.exports = async (req, res) => {
         console.error(error);
     })
     // let strava = await getData('https://www.strava.com/api/v3/athlete', UserData.accessToken)
-    console.log('UserData', UserData)
-    console.log('strava', strava)
+    // console.log('UserData', UserData)
+    // console.log('strava', strava)
     res.render('strava', {
         UserData,
         strava,
