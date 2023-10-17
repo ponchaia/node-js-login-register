@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="generator" content="Hugo 0.84.0">
-    <title>Signin Template · Bootstrap v5.0</title>
+    <title>Strava Profile</title>
 
     <!-- Bootstrap core CSS -->
     <!-- <link href="/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="/docs/5.0/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
-    <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json">
+    <!-- <link rel="manifest" href="/docs/5.0/assets/img/favicons/manifest.json"> -->
     <link rel="mask-icon" href="/docs/5.0/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
     <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#7952b3">
@@ -37,7 +37,9 @@
     </style>
 
     <!-- Custom styles for this template -->
-    <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900&amp;display=swap" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;1,600&display=swap" rel="stylesheet">
+
     <!-- Custom styles for this template -->
     <link href="/css/blog.css" rel="stylesheet">
   </head>
@@ -75,11 +77,11 @@
     <main class="container">
       <div class="p-4 p-md-5 mb-4 text-black rounded bg-white border">
         <div class="col-md-6 px-0">
-          <h1 class="display-4 fst-italic">Strava User Profile</h1>          
+          <h1 class="display-4 fst-italic bold">Strava User Profile</h1>
           <% if (UserData && UserData['stravaUserId'] != 0 && strava && strava['athlete'] == null) { %>
             <a href="/sync/data?page=strava" class="btn btn-outline-secondary mt-2">Sync Data</a>
           <% } else if (strava && strava['athlete'] != null) { %>
-            <h3>Strava User ID <%= strava.athlete.id %></h3>
+            <h3 class="display-8">Strava User ID <%= strava.athlete.id %></h3>
             <p class="lead mb-0"><small>First Name:</small> <b><%= strava.athlete.firstname %></b></p>
             <p class="lead mb-0"><small>Last Name:</small> <b><%= strava.athlete.lastname %></b></p>
             <p class="lead mb-0"><small>City:</small> <b><%= strava.athlete.city %></b></p>
@@ -99,47 +101,51 @@
           <% } %>
         </div>
       </div>
-      <div class="p-4 p-md-5 mb-4 text-black rounded bg-white">
+      <div class="row p-3 mb-4 text-black rounded bg-white">
         <h1 class="display-4 fst-italic">Athlete Activities</h1>
         <p class="lead mb-1">Last 30 days of activity</p>
           <% if (strava && strava['athleteActivities'] != null) { %>
             <% for(let i=0; i < strava['athleteActivities'].length; i++) { %>              
-              <div class="row px-0 rounded border mb-2">
-                <div class="col-2 p-2">
-                  <% if (strava.athleteActivities[i].type === "Ride" || strava.athleteActivities[i].type === "VirtualRide") { %>
-                    <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="70" height="70" class="------packages-feed-ui-src-features-Activity-Activity__activity-icon--lq3sA">
-                      <title>Ride</title>
-                      <path d="M5.5 19.675a5.166 5.166 0 005.105-4.485h1.105l3.28-6.52.76 1.46a5.044 5.044 0 101.22-.57l-2.03-3.89H17a.333.333 0 01.33.33v.57h1.34V6A1.674 1.674 0 0017 4.32h-4.29l1.57 3.01H8.542L7.66 5.67h1.45l-.72-1.35H4.17l.72 1.35h1.241l1.26 2.37v.01l-.76 1.41a5.2 5.2 0 00-1.13-.135 5.175 5.175 0 100 10.35zm12.79-4.695h1.52l-2.2-4.2c.291-.073.59-.11.89-.11a3.83 3.83 0 11-3.83 3.83 3.877 3.877 0 011.7-3.19l1.92 3.67zm-4.82-6.31l-2.046 4.082-2.17-4.082h4.216zm-5.32.8l2.323 4.371H5.8l2.35-4.37zM5.5 10.675c.151.005.302.019.451.041l-1.58 2.944.79 1.53h4.1a3.822 3.822 0 11-3.76-4.515z" fill=""></path>
-                    </svg>
-                  <% } else if (strava.athleteActivities[i].type === "Run" || strava.athleteActivities[i].type === "VirtualRun") { %>
-                    <img src="/images/icons/shoes.png" alt="run" width="60" height="60" title="run">
-                  <% } else if (strava.athleteActivities[i].type === "Walk") { %>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-walking" viewBox="0 0 16 16">
-                      <title>Walk</title>
-                      <path d="M9.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM6.44 3.752A.75.75 0 0 1 7 3.5h1.445c.742 0 1.32.643 1.243 1.38l-.43 4.083a1.75 1.75 0 0 1-.088.395l-.318.906.213.242a.75.75 0 0 1 .114.175l2 4.25a.75.75 0 1 1-1.357.638l-1.956-4.154-1.68-1.921A.75.75 0 0 1 6 8.96l.138-2.613-.435.489-.464 2.786a.75.75 0 1 1-1.48-.246l.5-3a.75.75 0 0 1 .18-.375l2-2.25Z"/>
-                      <path d="M6.25 11.745v-1.418l1.204 1.375.261.524a.75.75 0 0 1-.12.231l-2.5 3.25a.75.75 0 1 1-1.19-.914l2.345-3.048Zm4.22-4.215-.494-.494.205-1.843a1.93 1.93 0 0 0 .006-.067l1.124 1.124h1.44a.75.75 0 0 1 0 1.5H11a.75.75 0 0 1-.531-.22Z"/>
-                    </svg>
-                  <% } else { %>
-                    <img src="/images/icons/active-user.png" alt="Activities" width="60" height="60" title="Activities">
-                  <% } %>
-                </div>
-                <div class="col-8 p-2">                
-                  <h3 class="display-8"><%= strava.athleteActivities[i].name %></h3><small><%= new Date(strava.athleteActivities[i].start_date) %></small>
-                  <hr />
-                  <p class="lead mb-0"><small>Distance:</small> <b><%= Math.round(strava.athleteActivities[i].distance / 1000 * 100) / 100 %> km</b></p>
-                  <p class="lead mb-0"><small>Moving Time:</small> <b><%= Math.round(strava.athleteActivities[i].moving_time / 60 * 100) / 100 %></b></p>
-                  <p class="lead mb-0"><small>Elevation Gain:</small> <b><%= Math.round(strava.athleteActivities[i].total_elevation_gain) %> m</b></p>
-                  <p class="lead mb-0"><small>Average Speed:</small> <b><%= Math.round(strava.athleteActivities[i].average_speed * 3.6 * 10) / 10 %> km/h</b></p>
-                  <p class="lead mb-0"><small>Average Heartrate:</small> <b><%= strava.athleteActivities[i].average_heartrate %> bmp</b></p>
-                  <p class="lead mb-0"><small>Max Heartrate:</small> <b><%= strava.athleteActivities[i].max_heartrate %> bmp</b></p>
-                  <p class="lead mb-0"><small>Calories:</small> <b>... Cal</b></p>                  
-                  <p class="lead mb-0"><small>Elapsed Time:</small> <b><%= Math.round(strava.athleteActivities[i].elapsed_time /60 * 100) /100 %></b></p>
-                </div>                    
+              <div class="col-12 col-md-6 px-4  mb-3  position-relative">
+                <div class="row rounded border shadow-sm">
+                  <div class="col-12 col-sm-3 p-5 position-relative">
+                    <% if (strava.athleteActivities[i].type === "Ride" || strava.athleteActivities[i].type === "VirtualRide") { %>
+                      <svg fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="70" height="70" class="items-center ------packages-feed-ui-src-features-Activity-Activity__activity-icon--lq3sA">
+                        <title>Ride</title>
+                        <path d="M5.5 19.675a5.166 5.166 0 005.105-4.485h1.105l3.28-6.52.76 1.46a5.044 5.044 0 101.22-.57l-2.03-3.89H17a.333.333 0 01.33.33v.57h1.34V6A1.674 1.674 0 0017 4.32h-4.29l1.57 3.01H8.542L7.66 5.67h1.45l-.72-1.35H4.17l.72 1.35h1.241l1.26 2.37v.01l-.76 1.41a5.2 5.2 0 00-1.13-.135 5.175 5.175 0 100 10.35zm12.79-4.695h1.52l-2.2-4.2c.291-.073.59-.11.89-.11a3.83 3.83 0 11-3.83 3.83 3.877 3.877 0 011.7-3.19l1.92 3.67zm-4.82-6.31l-2.046 4.082-2.17-4.082h4.216zm-5.32.8l2.323 4.371H5.8l2.35-4.37zM5.5 10.675c.151.005.302.019.451.041l-1.58 2.944.79 1.53h4.1a3.822 3.822 0 11-3.76-4.515z" fill=""></path>
+                      </svg>
+                    <% } else if (strava.athleteActivities[i].type === "Run" || strava.athleteActivities[i].type === "VirtualRun") { %>
+                      <img src="/images/icons/shoes.png" alt="run" width="60" height="60" title="run">
+                    <% } else if (strava.athleteActivities[i].type === "Walk") { %>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-walking" viewBox="0 0 16 16">
+                        <title>Walk</title>
+                        <path d="M9.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM6.44 3.752A.75.75 0 0 1 7 3.5h1.445c.742 0 1.32.643 1.243 1.38l-.43 4.083a1.75 1.75 0 0 1-.088.395l-.318.906.213.242a.75.75 0 0 1 .114.175l2 4.25a.75.75 0 1 1-1.357.638l-1.956-4.154-1.68-1.921A.75.75 0 0 1 6 8.96l.138-2.613-.435.489-.464 2.786a.75.75 0 1 1-1.48-.246l.5-3a.75.75 0 0 1 .18-.375l2-2.25Z"/>
+                        <path d="M6.25 11.745v-1.418l1.204 1.375.261.524a.75.75 0 0 1-.12.231l-2.5 3.25a.75.75 0 1 1-1.19-.914l2.345-3.048Zm4.22-4.215-.494-.494.205-1.843a1.93 1.93 0 0 0 .006-.067l1.124 1.124h1.44a.75.75 0 0 1 0 1.5H11a.75.75 0 0 1-.531-.22Z"/>
+                      </svg>
+                    <% } else { %>
+                      <img src="/images/icons/active-user.png" alt="Activities" width="60" height="60" title="Activities">
+                    <% } %>
+                  </div>
+                  <div class="col-12 col-sm-9 p-2">                
+                    <h3 class="display-8"><%= strava.athleteActivities[i].name %></h3><small><%= new Date(strava.athleteActivities[i].start_date) %></small>
+                    <hr />
+                    <p class="lead mb-0"><small>Distance:</small> <b><%= Math.round(strava.athleteActivities[i].distance / 1000 * 100) / 100 %> km</b></p>
+                    <p class="lead mb-0"><small>Moving Time:</small> <b><%= Math.floor(strava.athleteActivities[i].moving_time / 60) %>:<%= Math.round((strava.athleteActivities[i].moving_time / 60 - Math.floor(strava.athleteActivities[i].moving_time / 60)) * 60) %></b></p>
+                    <p class="lead mb-0"><small>Elevation Gain:</small> <b><%= Math.round(strava.athleteActivities[i].total_elevation_gain) %> m</b></p>
+                    <p class="lead mb-0"><small>Average Speed:</small> <b><%= Math.round(strava.athleteActivities[i].average_speed * 3.6 * 10) / 10 %> km/h</b></p>
+                    <p class="lead mb-0"><small>Average Heartrate:</small> <b><%= strava.athleteActivities[i].average_heartrate %> bmp</b></p>
+                    <p class="lead mb-0"><small>Max Heartrate:</small> <b><%= strava.athleteActivities[i].max_heartrate %> bmp</b></p>
+                    <p class="lead mb-0"><small>Calories:</small> <b><%= strava.athleteActivities[i].activities.calories %> Cal</b></p>                  
+                    <p class="lead mb-0"><small>Elapsed Time:</small> <b><%= Math.floor(strava.athleteActivities[i].elapsed_time / 60) %>:<%= Math.round((strava.athleteActivities[i].elapsed_time / 60 - Math.floor(strava.athleteActivities[i].elapsed_time / 60)) * 60) %></b></p>
+                    <hr />
+                    <img src="/images/icons/watch.png" alt="Device" width="50" height="50" title="Device"> <%= strava.athleteActivities[i].activities.device_name %>
+                  </div>  
+                </div>                  
               </div>
             <% } %>
           <% } %>
       </div>
-      <div class="row mb-2">
+      <!-- <div class="row mb-2">
         <div class="col-md-12">
           <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
@@ -147,7 +153,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </main>
     <footer class="blog-footer">
       <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="#">@...</a>.</p>

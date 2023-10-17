@@ -7,8 +7,7 @@ const Schema = new mongoose.Schema({
     },
     athlete: Object,
     athleteStat: Object,
-    athleteActivities: Object,
-    activities: Object,
+    athleteActivities: Array,
     createdAt: Date,
     updatedAt: Date,
 })

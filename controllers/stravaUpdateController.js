@@ -81,11 +81,11 @@ const getAthleteActivityData = async (userId, accessToken) => {
                     console.log("Add User athlete activity successfully!")
                 }
             }).then(async() => {
-                // await StravaProfiles.findOne({ userId: userId}).lean().exec().then(profile => {
-                //     profile.athleteActivities.forEach(async element => {
-                //         getActivityData(userId, accessToken, element.id)
-                //     });
-                // })
+                await StravaProfiles.findOne({ userId: userId}).lean().exec().then(profile => {
+                    profile.athleteActivities.forEach(async element => {
+                        getActivityData(userId, accessToken, element.id)
+                    });
+                })
                 
             })
             
@@ -100,19 +100,10 @@ const getActivityData = async (userId, accessToken, activityId) => {
             let profile = await StravaProfiles.findOne({ userId: userId}).lean().exec()
             console.log('profile', profile)                
             if (profile) {
-                if (profile.activities){                    
-                    profile.activities.push(activities)
-                    
-                    let results = await StravaProfiles.updateOne({ _id: profile._id }, { activities: profile.activities })
-                    console.log(results)
-                    console.log('Update User activities successfully!')
-                } else {
-                    profile.activities = [activities]
-                    
-                    let results = await StravaProfiles.updateOne({ _id: profile._id }, { activities: profile.activities })
-                    console.log(results)
-                    console.log('Update User activities successfully!')
-                }
+                let results = await StravaProfiles.findOneAndUpdate({ 'athleteActivities.id': activityId }, { $set: { 'athleteActivities.$.activities': activities } })
+                .catch(error => console.error(error))
+                console.log(results)
+                console.log('Update User activities successfully!')
             }        
         } else {
             console.log('Activity', activities)
