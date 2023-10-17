@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
             })
             console.log('created strava profile ', profile._id)
         }
-        console.log(results)
+        //console.log(results)
         console.log("Update strava user profile successfully!")
         return res.redirect('/strava')
     }).catch((error) => {

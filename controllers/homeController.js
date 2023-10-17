@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
                         tokenExpiresIn: response.expires_in
                     }
                     let results = await Users.updateOne({ _id: UserData._id }, data )
-                    console.log(results)
+                    //console.log(results)
                     if(res.upsertedCount > 0) console.log('Updated UserData')
                 }
             }).catch(async (e) => {
