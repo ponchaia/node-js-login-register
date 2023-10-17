@@ -62,7 +62,7 @@ const getAthleteStatData = async (userId, accessToken, stravaUserId) => {
 const getAthleteActivityData = async (userId, accessToken) => {
     let date = new Date();
     let before = Math.floor(date.getTime() / 1000);
-    date.setDate(date.getDate() - 300);
+    date.setDate(date.getDate() - 30);
     let after = Math.floor(date.getTime() / 1000);
     await getData(`https://www.strava.com/api/v3/athlete/activities?before=${before}&after=${after}&page=1&per_page=30`, accessToken).then(async (data) => {
         if (!data.errors) {    
